@@ -17,9 +17,12 @@ DAGR_DIR=$WORK_DIR/dagr
 cd $DAGR_DIR
 
 # 2. Create conda env + install PyTorch 1.11.0 with CUDA 11.3
+#    We use both -c pytorch and -c conda-forge because the default pytorch channel
+#    may not have all pinned versions available anymore. conda-forge helps resolve
+#    older packages (setuptools, mkl, etc.) that have been dropped from main channels.
 conda create -y -n dagr python=3.8
 conda activate dagr
-conda install -y setuptools==69.5.1 mkl==2024.0 pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch
+conda install -y setuptools==69.5.1 mkl==2024.0 pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch -c conda-forge
 
 # 3. Install nvcc 11.3 inside the conda env so CUDA extensions compile correctly.
 #    Without this, setup.py finds the system nvcc (12.4) which is incompatible
@@ -42,7 +45,7 @@ bash install_env.sh
 #    NOTE: This script clones repos via git@github.com:... — you need SSH keys
 #    set up, or manually edit the script to use HTTPS URLs.
 bash download_and_install_dependencies.sh
-conda install -y h5py blosc-hdf5-plugin
+conda install -y -c conda-forge h5py blosc-hdf5-plugin
 
 # 7. Install dagr package (compiles asy_tools and ev_graph_cuda extensions)
 pip install -e .
@@ -109,3 +112,4 @@ tqdm output.
 | `torch-scatter` install fails | PyG wheel URL mismatch | Check `install_env.sh` constructs URL with `cu113`; run `python -c "import torch; print(torch.__version__, torch.version.cuda)"` |
 | SSH clone failures in `download_and_install_dependencies.sh` | No GitHub SSH key | Add SSH key or edit script to use HTTPS URLs |
 | `ModuleNotFoundError: No module named 'dagr'` | `pip install -e .` not run or failed silently | Re-run `pip install -e .` and check for errors |
+| `PackagesNotFoundError` / `ResolvePackageNotFound` during conda install | Pinned package versions dropped from default channels | Add `-c conda-forge` to the conda install command; conda-forge retains older package versions longer than the default channel |
