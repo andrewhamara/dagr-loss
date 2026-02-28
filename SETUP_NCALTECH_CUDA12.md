@@ -13,6 +13,7 @@ first, if you don't have conda installed on your Linux system, download it and i
 ```bash
 curl -O https://repo.anaconda.com/archive/Anaconda3-2025.12-2-Linux-x86_64.sh
 bash ~/Anaconda3-2025.12-2-Linux-x86_64.sh
+source ~/.bashrc
 ```
 
 once conda is installed on your system, continue setting up
