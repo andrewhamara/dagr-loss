@@ -8,7 +8,7 @@ correct toolkit version.
 
 ## Full Setup
 
-first, if you don't have conda installed on your Linux system, download it and install it:
+First, if you don't have conda installed on your Linux system, download it and install it:
 
 ```bash
 curl -O https://repo.anaconda.com/archive/Anaconda3-2025.12-2-Linux-x86_64.sh
@@ -16,14 +16,13 @@ bash ~/Anaconda3-2025.12-2-Linux-x86_64.sh
 source ~/.bashrc
 ```
 
-once conda is installed on your system, continue setting up
-
+Once conda is installed on your system, continue setting up:
 
 ```bash
 # 1. Clone repo
 WORK_DIR=/path/to/work/directory
 cd $WORK_DIR
-git clone git@github.com:uzh-rpg/dagr.git
+git clone git@github.com:andrewhamara/dagr-loss.git
 DAGR_DIR=$WORK_DIR/dagr
 cd $DAGR_DIR
 
@@ -48,6 +47,14 @@ export PATH=$CONDA_PREFIX/bin:$PATH
 # Verify nvcc is the conda one
 which nvcc          # should print $CONDA_PREFIX/bin/nvcc
 nvcc --version      # should show 11.3
+
+before installing, run these to ensure the correct gcc version:
+
+sudo apt install gcc-10 g++-10
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+sudo update-alternatives --set gcc /usr/bin/gcc-10
+sudo update-alternatives --set g++ /usr/bin/g++-10
 
 # 5. Install pytorch-geometric stack (auto-detects torch 1.11.0 + cu113)
 bash install_env.sh
